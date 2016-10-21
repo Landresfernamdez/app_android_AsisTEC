@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AsisTEC</string>
+    <string name="idcliente">IdCliente</string>
+    <string name="nombre">Nombre</string>
+    <string name="telefono">Telefono</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="btnstartlist">Tomar lista</string>
+    <string name="imgevents">imgevents</string>
+    <string name="btnback">Salir</string>
+    <string name="continuar">Ingresar</string>
+    <string name="imageview2">image1</string>
+    <string name="image">imageview2</string>
+    <string name="title_menu_listando">menu_listando</string>
+    <string name="btnregisterE">registrar Entrada</string>
+    <string name="Salir">Salir</string>
+</resources>
