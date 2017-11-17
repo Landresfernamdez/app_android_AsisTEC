@@ -10,16 +10,22 @@ namespace WebServiceAsistencias.Models
     public class LugarManager //Models views controllera  MVC4
     {
         private static string cadenaConexion =
-            //@"Data Source=WIN-8TMISC6LAH5;Initial Catalog=DBCLIENTES;User Id=drojas;Password=drojas";//\SQLEXPRESS
-            @"Data Source=172.24.43.105;Initial Catalog=AsiVenTEC;User Id=sa;Password=86374844botas";
+          //@"Data Source=WIN-8TMISC6LAH5;Initial Catalog=DBCLIENTES;User Id=drojas;Password=drojas";//\SQLEXPRESS
+          @"Data Source=172.24.29.16;Initial Catalog=EventosTEC;User Id=sa;Password=71a0ses3919";
 
         public bool InsertarLugar(Lugar cli)
         {
             SqlConnection con = new SqlConnection(cadenaConexion);
+
             con.Open();
+
             string sql = "INSERT INTO lugares (lugar) values (@place)";
+
             SqlCommand cmd = new SqlCommand(sql, con);
-            cmd.Parameters.Add("@place", System.Data.SqlDbType.Int).Value = cli.lugar;
+            cmd.Parameters.Add("@place", System.Data.SqlDbType.NVarChar).Value = cli.lugar;
+        //    cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar).Value = cli.Nombre;
+      //      cmd.Parameters.Add("@telefono", System.Data.SqlDbType.NVarChar).Value = cli.Telefono;
+
             int res = cmd.ExecuteNonQuery();
 
             con.Close();
@@ -36,7 +42,11 @@ namespace WebServiceAsistencias.Models
             string sql = "UPDATE Clientes SET Nombre = @nombre, Telefono = @telefono WHERE IdCliente = @idcliente";
 
             SqlCommand cmd = new SqlCommand(sql, con);
-            
+
+          //  cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar).Value = cli.Nombre;
+     //       cmd.Parameters.Add("@telefono", System.Data.SqlDbType.NVarChar).Value = cli.Telefono;
+      //      cmd.Parameters.Add("@idcliente", System.Data.SqlDbType.Int).Value = cli.Id;
+
             int res = cmd.ExecuteNonQuery();
 
             con.Close();

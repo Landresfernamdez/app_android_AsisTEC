@@ -9,21 +9,27 @@ namespace WebServiceAsistencias.Models
 {
     public class AnfitrionManager //Models views controllera  MVC4
     {
-        private static string cadenaConexion =
-            //@"Data Source=WIN-8TMISC6LAH5;Initial Catalog=DBCLIENTES;User Id=drojas;Password=drojas";//\SQLEXPRESS
-            @"Data Source=172.24.43.105;Initial Catalog=AsiVenTEC;User Id=sa;Password=86374844botas";// Integrated Security=True";
+        private static string cadenaConexion = @"Data Source=172.24.29.16;Initial Catalog=EventosTEC;User Id=sa;Password=71a0ses3919";
 
-        public bool InsertarCliente(Anfitrion cli)
+        public bool InsertarEdecan(Encargado cli)
         {
             SqlConnection con = new SqlConnection(cadenaConexion);
 
             con.Open();
 
-            string sql = "INSERT INTO Clientes (IdCliente,Nombre, Telefono) VALUES (@id,@nombre, @telefono)";
+            string sql = "insert into personas(cedula,nombre,apellidos,procedencia,edad) values (@cedula,@nombre,@apellidos,@procedencia,@edad) insert into Anfitriones(cedula,contraseña,tipoCuenta) values(@cedula,@contraseña,@tipoCuenta)";
 
             SqlCommand cmd = new SqlCommand(sql, con);
-            cmd.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = cli.id;
-            cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar).Value = cli.contra;
+            cmd.Parameters.Add("@cedula", System.Data.SqlDbType.NVarChar).Value =cli.cedula;
+            cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar).Value = cli.nombre;
+            cmd.Parameters.Add("@apellidos", System.Data.SqlDbType.NVarChar).Value = cli.apellidos;
+            cmd.Parameters.Add("@procedencia", System.Data.SqlDbType.NVarChar).Value = cli.procedencia;
+            cmd.Parameters.Add("@edad", System.Data.SqlDbType.Int).Value = cli.edad;
+            cmd.Parameters.Add("@contraseña", System.Data.SqlDbType.NVarChar).Value = cli.contraseña;
+            cmd.Parameters.Add("@tipoCuenta", System.Data.SqlDbType.NVarChar).Value = cli.tipoCuenta;
+
+
+
 
 
             int res = cmd.ExecuteNonQuery();
@@ -34,6 +40,27 @@ namespace WebServiceAsistencias.Models
         }
 
 
+        /* public bool ActualizarCliente(Anfitrion cli)
+         {
+             SqlConnection con = new SqlConnection(cadenaConexion);
+
+             con.Open();
+
+             string sql = "UPDATE Clientes SET Nombre = @nombre, Telefono = @telefono WHERE IdCliente = @idcliente";
+
+             SqlCommand cmd = new SqlCommand(sql, con);
+
+             cmd.Parameters.Add("@nombre", System.Data.SqlDbType.NVarChar).Value = cli.Nombre;
+             cmd.Parameters.Add("@telefono", System.Data.SqlDbType.NVarChar).Value = cli.Telefono;
+             cmd.Parameters.Add("@idcliente", System.Data.SqlDbType.Int).Value = cli.Id;
+
+             int res = cmd.ExecuteNonQuery();
+
+             con.Close();
+
+             return (res == 1);
+         }*/
+
         public Anfitrion ObtenerCliente(string id,string pass)
         {
             Anfitrion cli = null;
@@ -42,7 +69,7 @@ namespace WebServiceAsistencias.Models
 
             con.Open();
 
-            string sql = "SELECT a.cedula, a.contraseña from Anfitriones as a where a.cedula= @idcliente";
+            string sql = "SELECT a.cedula, a.contraseña from Anfitriones as a where a.cedula= @idcliente and a.tipoCuenta='a'";
 
             SqlCommand cmd = new SqlCommand(sql, con);
 
@@ -57,6 +84,7 @@ namespace WebServiceAsistencias.Models
                 cli.id = reader.GetString(0);
                 cli.contra = reader.GetString(1);
             }
+
             reader.Close();
             if (cli.contra.Equals(pass))
             {

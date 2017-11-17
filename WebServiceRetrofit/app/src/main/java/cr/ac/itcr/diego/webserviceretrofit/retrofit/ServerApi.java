@@ -2,33 +2,31 @@ package cr.ac.itcr.diego.webserviceretrofit.retrofit;
 
 import java.util.ArrayList;
 
-import cr.ac.itcr.diego.webserviceretrofit.dto.Anfitriones;
-import cr.ac.itcr.diego.webserviceretrofit.dto.Estudiantes;
+import cr.ac.itcr.diego.webserviceretrofit.dto.Events;
+import cr.ac.itcr.diego.webserviceretrofit.dto.Personas;
+import cr.ac.itcr.diego.webserviceretrofit.dto.Usuarios;
 import cr.ac.itcr.diego.webserviceretrofit.dto.Eventos;
 import cr.ac.itcr.diego.webserviceretrofit.dto.Registros;
 import retrofit.Callback;
 import retrofit.http.Body;
-import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.PUT;
 import retrofit.http.Path;
 
 /**
  * Created by Estudiante on 10/10/2015.
  */
 public interface ServerApi {
-
-
-    //////
-    @GET("/Anfitriones/Anfitrion/{id}/{password}")
-    void validarLogin(@Path("id")String id, @Path("password") String password, Callback<Anfitriones> usersCallback);
-
+    //Se encarga de validar si el edecan existe
+    @GET("/Edecanes/Edecan/{id}/{pass}")
+    void validarLogin(@Path("id")String id, @Path("pass") String pass, Callback<Usuarios> usersCallback);
+    //Se encarga de recuperar los eventos de un edecan
     @GET("/Eventos/Evento/{id}")
-    void obtenerEventos(@Path("id")String id, Callback<ArrayList<Eventos>> usersCallback);
+    void obtenerEvento(@Path("id")String id,Callback<ArrayList<Events>>usersCallback);
 
-    @GET("/Events/Evento/{id}")
-    void obtenerEvento(@Path("id")String id, Callback<ArrayList<Eventos>> usersCallback);
+    @GET("/Actividades/Actividad/{ida}")
+    void ObtenerActividadesDeAnfitrion(@Path("ida")String ida, Callback<ArrayList<Eventos>> usersCallback);
+
 
     @POST("/Registros/Registro")
     void postRegistrosInformation(@Body Registros post, Callback<Boolean> postCallback);
@@ -37,10 +35,10 @@ public interface ServerApi {
     void postRegistrosSInformation(@Body Registros post, Callback<Boolean> postCallback);
 
 
-    @POST("/Estudiantes/Estudiante")
-    void putEstudiantesInformation(@Body Estudiantes estudiantes, Callback<Boolean> postCallback);
+    @POST("/Personas/Persona")
+    void putEstudiantesInformation(@Body Personas personas, Callback<Boolean> postCallback);
 
 
-    @GET("/Estudiantes/Estudiante/{id}")
-    void obtenerEstudiante(@Path("id")String id,Callback<Estudiantes> usersCallback);
+    @GET("/Personas/Persona/{id}")
+    void obtenerEstudiante(@Path("id")String id,Callback<Personas> usersCallback);
 }//webp comprimir imagenes/formato de google

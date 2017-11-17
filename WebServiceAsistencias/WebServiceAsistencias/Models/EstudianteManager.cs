@@ -8,8 +8,8 @@ namespace WebServiceAsistencias.Models
     public class EstudianteManager
     {
         private static string cadenaConexion =
-            //@"Data Source=WIN-8TMISC6LAH5;Initial Catalog=DBCLIENTES;User Id=drojas;Password=drojas";//\SQLEXPRESS
-            @"Data Source=172.24.43.105;Initial Catalog=AsiVenTEC;User Id=sa;Password=86374844botas";// Integrated Security=True";
+           //@"Data Source=WIN-8TMISC6LAH5;Initial Catalog=DBCLIENTES;User Id=drojas;Password=drojas";//\SQLEXPRESS
+           @"Data Source=172.24.29.16;Initial Catalog=EventosTEC;User Id=sa;Password=71a0ses3919";
         public Estudiante ObtenerEstudiante(string id)
         {
             Estudiante student = null;
@@ -30,7 +30,7 @@ namespace WebServiceAsistencias.Models
             if (reader.Read())
             {
                 student = new Estudiante();
-                student.estado= reader.GetString(0);
+                student.estado = reader.GetString(0);
                 student.carne = reader.GetString(1);
                 student.cedula = reader.GetString(2);
             }

@@ -8,8 +8,8 @@ namespace WebServiceAsistencias.Models
 {
     public class RegistroManager
     {
-        private static string cadenaConexion =@"Data Source=172.24.43.105;Initial Catalog=AsiVenTEC;User Id=sa;Password=86374844botas";
-        
+        private static string cadenaConexion = @"Data Source=172.24.29.16;Initial Catalog=EventosTEC;User Id=sa;Password=71a0ses3919";
+
         public bool InsertarRegistro(Registro regi)
         {
             SqlConnection con = new SqlConnection(cadenaConexion);

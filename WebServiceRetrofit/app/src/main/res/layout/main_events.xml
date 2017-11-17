@@ -2,21 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo2"
+    android:background="#ffffff"
     android:weightSum="1">
 
-    <ListView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:id="@+id/listEvents"
-        android:layout_weight="0.25" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Atras"
-        android:id="@+id/btnrMoptions"
-        android:layout_gravity="right"
-        android:background="@drawable/btn_circle"
-        android:onClick="generaMENU" />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="345dp"
+            android:id="@+id/listActivities"
+            android:layout_weight="0.29"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Actividades"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.29"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold|italic"
+            android:layout_marginTop="15dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:id="@+id/btnMrOptions"
+            android:background="@drawable/btn_circle"
+            android:onClick="generaMENU"
+            android:foreground="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:layout_below="@+id/listActivities"
+            android:layout_alignEnd="@+id/listActivities" />
+    </RelativeLayout>
 </LinearLayout>

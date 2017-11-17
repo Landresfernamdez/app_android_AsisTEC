@@ -15,10 +15,10 @@
     <AssemblyName>WebServiceAsistencias</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44301</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
-    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,7 +29,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IncludeIisSettings>true</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -84,14 +83,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ActividadesController.cs" />
+    <Compile Include="Controllers\ActivitysController.cs" />
+    <Compile Include="Controllers\EncargadosController.cs" />
     <Compile Include="Controllers\EstudiantesController.cs" />
+    <Compile Include="Controllers\HostsController.cs" />
     <Compile Include="Controllers\RegistersController.cs" />
     <Compile Include="Controllers\RegistrosController.cs" />
-    <Compile Include="Models\Estudiante.cs" />
-    <Compile Include="Models\EstudianteManager.cs" />
-    <Compile Include="Models\EventManager.cs" />
+    <Compile Include="Controllers\sEventsController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
+    <Compile Include="Controllers\EdecanesController.cs" />
     <Compile Include="Controllers\LugaresController.cs" />
+    <Compile Include="Models\ActividadManager.cs" />
+    <Compile Include="Models\ActivityManager.cs" />
     <Compile Include="Models\Anfitrion.cs" />
     <Compile Include="Models\AnfitrionManager.cs" />
     <Compile Include="Controllers\AnfitrionesController.cs" />
@@ -99,18 +103,32 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Encargado.cs" />
+    <Compile Include="Models\EncargadoManager.cs" />
+    <Compile Include="Models\Estudiante.cs" />
+    <Compile Include="Models\EstudianteManager.cs" />
+    <Compile Include="Models\HostManager.cs" />
+    <Compile Include="Models\Persona.cs" />
+    <Compile Include="Models\RegisterManager.cs" />
+    <Compile Include="Models\Registro.cs" />
+    <Compile Include="Models\RegistroManager.cs" />
+    <Compile Include="Models\sEventManager.cs" />
+    <Compile Include="Models\sEvent.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\EventManager.cs" />
+    <Compile Include="Models\Dato.cs" />
+    <Compile Include="Models\Edecan.cs" />
+    <Compile Include="Models\EdecanManager.cs" />
     <Compile Include="Models\LugarManager.cs" />
     <Compile Include="Models\Lugar.cs" />
     <Compile Include="Models\Evento.cs" />
     <Compile Include="Models\EventoManager.cs" />
-    <Compile Include="Models\RegisterManager.cs" />
-    <Compile Include="Models\Registro.cs" />
-    <Compile Include="Models\RegistroManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\server.pubxml" />
     <None Include="Properties\PublishProfiles\web.pubxml" />
     <None Include="PublishProfiles\WebAsistenciasTec.pubxml" />
     <None Include="PublishProfiles\WebServiceAsistencias.pubxml" />
@@ -124,10 +142,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Cursos\" />
-    <Folder Include="Views\Events\" />
     <Folder Include="Views\Fechas\" />
-    <Folder Include="Views\Registros\" />
-    <Folder Include="Views\Registro\" />
     <Folder Include="Views\Students\" />
   </ItemGroup>
   <PropertyGroup>
@@ -145,7 +160,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>5285</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4040/</IISUrl>
+          <IISUrl>http://localhost:3628/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

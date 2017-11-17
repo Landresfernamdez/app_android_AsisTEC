@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebServiceAsistencias.Models;
 
-namespace ServicioWebRest.Controllers
+namespace WebServiceAsistencias.Controllers
 {
     public class LugaresController : Controller
     {
@@ -47,5 +47,5 @@ namespace ServicioWebRest.Controllers
         }
     }
 
-}
+    }
 

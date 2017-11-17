@@ -1,7 +1,9 @@
 package cr.ac.itcr.diego.webserviceretrofit.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -20,10 +22,9 @@ import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 
-import cr.ac.itcr.diego.webserviceretrofit.dto.Estudiantes;
+import cr.ac.itcr.diego.webserviceretrofit.dto.Personas;
 import cr.ac.itcr.diego.webserviceretrofit.dto.Registros;
 import cr.ac.itcr.diego.webserviceretrofit.retrofit.ServerApi;
-import cr.ac.itcr.diego.webserviceretrofit.views.MainActivity;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -34,57 +35,60 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import cr.ac.itcr.diego.webserviceretrofit.R;
 public class Read extends AppCompatActivity {
-
+    //Se declaran todad las variables y componentes a utilizar
+    public static int contador=0;
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
     private TextView mTextView;
     private TextView InfoTextView;
     private NfcAdapter mNfcAdapter;
-    public String carne;
+    public String cedula;
     private Button btnBack;
-    String baseurl = "http://172.24.43.105";//"http://172.24.42.5";
     static public ServerApi serverApi;
+    public static boolean bandera;
+    public static String id_evento;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_listando);
-        btnBack=(Button)findViewById(R.id.btnback);
-        //Button back=(Button)findViewById(R.id.btnReturn);
-       // InfoTextView = (TextView) findViewById(R.id.txvRead);
-       // mTextView = (TextView) findViewById(R.id.textView_explanation);
+        bandera=false;
         RestAdapter.Builder builder = new RestAdapter.Builder()
-                .setEndpoint(baseurl)
+                .setEndpoint(MainActivity.baseurl)
                 .setClient(new OkClient(new OkHttpClient()));
         serverApi = builder.build().create(ServerApi.class);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
+        mTextView=(TextView)findViewById(R.id.tvmsj);
+        btnBack=(Button)findViewById(R.id.btnback);
+        handleIntent(getIntent());
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bandera=true;
+                MainActivity m=new MainActivity();
+                id_evento=m.idGenerico;
+                Intent nForm = new Intent(Read.this, MainActivity.class);
+                finish();
+                startActivity(nForm);
+            }
+        });
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
             Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
             finish();
             return;
-
         }
+        //Verifica si el NFC en el dispositivo esta activado
 
-        if (!mNfcAdapter.isEnabled()) {
-            mTextView.setText("Por favor active su NFC para continuar.");
-        } else {
-            //  mTextView.setText(R.string.explanation);
-        }
-
-        handleIntent(getIntent());
-        /*back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nForm = new Intent(Read.this, MainActivity.class);
-                finish();
-                startActivity(nForm);
+            if (!mNfcAdapter.isEnabled()) {
+                mTextView.setText("Active el NFC");
+            } else {
+                mTextView.setText("leyendo......");
             }
-        });*/
+
+
     }
 
     @Override
@@ -97,7 +101,6 @@ public class Read extends AppCompatActivity {
          */
         setupForegroundDispatch(this, mNfcAdapter);
     }
-
     @Override
     protected void onPause() {
         /**
@@ -107,7 +110,6 @@ public class Read extends AppCompatActivity {
 
         super.onPause();
     }
-
     @Override
     protected void onNewIntent(Intent intent) {
         /**
@@ -119,8 +121,6 @@ public class Read extends AppCompatActivity {
          */
         handleIntent(intent);
     }
-
-
     /**
      * @param activity The corresponding {@link Activity} requesting the foreground dispatch.
      * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
@@ -235,125 +235,141 @@ public class Read extends AppCompatActivity {
             // Get the Text
             return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
         }
+        public void mensaje(String mens) {
+            new AlertDialog.Builder(Read.this)
+                    .setTitle("Atencion")
+                    .setMessage(mens)
+                    .setCancelable(false)
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+
+                        }
+                    }).create().show();
+
+        }
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                carne= result.substring(0,10);
-                serverApi.obtenerEstudiante(carne, new Callback<Estudiantes>() {
-                    @Override//Response ....trae la respuesta del servidor
-                    public void success(Estudiantes estudiantes, Response response) {
-                        if (estudiantes != null) {
+                cedula= result.substring(0,9);
+                try{
+                    serverApi.obtenerEstudiante(cedula,new Callback<Personas>() {
+                        @Override//Response ....trae la respuesta del servidor
+                        public void success(Personas personas, Response response) {
+                            if (personas != null) {
+                                //Valida si el personas biene de entrada
+                                if (personas.getEstado().equals("1")) {
+                                    //Inserta en el registro de entrada
+                                    try{
+                                        Registros registros=new Registros();
+                                        registros.setCedula(cedula);
+                                        String pattern = "yyyy-MM-dd HH:mm:ss";//Formato de hora y fecha
+                                        Calendar cal = Calendar.getInstance();//Recupera la hora y fecha
+                                        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 
-                            Toast.makeText(getApplicationContext(),carne, Toast.LENGTH_LONG).show();
-                            //Valida si el estudiantes biene de entrada
-                            if (estudiantes.getEstado().equals("1")) {
-                                //Inserta en el registro de entrada
-                                Registros registros=new Registros();
-                                registros.setCarne(carne);
-                                String pattern = "yyyy-MM-dd HH:mm:ss";//Formato de hora y fecha
-                                Calendar cal = Calendar.getInstance();//Recupera la hora y fecha
-                                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                                String strDate = sdf.format(cal.getTime());
-                                String fecha=strDate.substring(0,10);
-                                String hora=strDate.substring(11);
-                                registros.setHora(hora);
-                                registros.setFecha(fecha);
-                                MainActivity m=new MainActivity();
-                                registros.setId_ev(m.id_ev);
+                                        String strDate = sdf.format(cal.getTime());
+                                        String fecha=strDate.substring(0,10);
+                                        String hora=strDate.substring(11);
+                                        registros.setHora(hora);
+                                        registros.setFecha(fecha);
+                                        registros.setIdActividad(MainActivity.id_Actividad);
 
-                                Toast.makeText(getApplicationContext(),registros.getHora(), Toast.LENGTH_LONG).show();
+                                        //Se encarga de meter informacion en el registro de entrada en sql
+                                        serverApi.postRegistrosInformation(registros, new Callback<Boolean>() {
+                                            @Override
+                                            public void success(Boolean aBoolean, Response response) {
+                                                mensaje("Se ha insertado con exito");
 
-                                Toast.makeText(getApplicationContext(),registros.getFecha(), Toast.LENGTH_LONG).show();
-                                //Se encarga de meter informacion en el registro de entrada en sql
-                                serverApi.postRegistrosInformation(registros, new Callback<Boolean>() {
-                                    @Override
-                                    public void success(Boolean aBoolean, Response response) {
+                                            }
 
-                                 Toast.makeText(getApplicationContext(), "Se ha insertado con exito", Toast.LENGTH_LONG).show();
-
+                                            @Override
+                                            public void failure(RetrofitError error) {
+                                                mensaje("Opps ha fallado la insercion");
+                                            }
+                                        });
+                                        personas.setEstado("0");
+                                        //Se encarga de actualizar la informacion del estado el cual indica que la persona entro
+                                        serverApi.putEstudiantesInformation(personas, new Callback<Boolean>() {
+                                            @Override
+                                            public void success(Boolean aBoolean, Response response) {
+                                                    mensaje("se actualizo la salida con exito");
+                                            }
+                                            @Override
+                                            public void failure(RetrofitError error) {
+                                                mensaje("Opps error en la actualizacion");
+                                            }
+                                        });
+                                    }catch (NumberFormatException io)
+                                    {
+                                        mensaje("Opps error de conexion");
                                     }
 
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                  Toast.makeText(getApplicationContext(), "Opps ha fallado la insercion", Toast.LENGTH_LONG).show();
+                                } else {
+                                    try{
+                                        //Inserta en el registro de entrada
+                                        Registros registros=new Registros();
+                                        registros.setCedula(cedula);
+                                        String pattern = "yyyy-MM-dd HH:mm:ss";//Formato de hora y fecha
+                                        Calendar cal = Calendar.getInstance();//Recupera la hora y fecha
+                                        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                                        String strDate = sdf.format(cal.getTime());
+                                        String fecha=strDate.substring(0,10);
+                                        String hora=strDate.substring(11);
+                                        registros.setHora(hora);
+                                        registros.setFecha(fecha);
+                                        registros.setIdActividad(MainActivity.id_Actividad);
+                                        //Se encarga de meter informacion en el registro de entrada en sql
+                                        serverApi.postRegistrosSInformation(registros, new Callback<Boolean>() {
+                                            @Override
+                                            public void success(Boolean aBoolean, Response response) {
+
+                                                mensaje("se inserto el asistente con exito");
+
+                                            }
+
+                                            @Override
+                                            public void failure(RetrofitError error) {
+                                                mensaje("Opps ha fallado la insercion");
+                                            }
+                                        });
+
+                                        personas.setEstado("1");
+                                        //Se encarga de actualizar la informacion del estado el cual indica que la persona salio
+                                        serverApi.putEstudiantesInformation(personas, new Callback<Boolean>() {
+                                            @Override
+                                            public void success(Boolean aBoolean, Response response) {
+
+                                                mensaje("se actualizo la entrada con exito");
+
+                                            }
+
+                                            @Override
+                                            public void failure(RetrofitError error) {
+                                                mensaje("Opps ha fallado la actualizacion");
+                                            }
+                                        });
                                     }
-                                });
-                                estudiantes.setEstado("0");
-                                //Se encarga de actualizar la informacion del estado el cual indica que la persona entro
-                                serverApi.putEstudiantesInformation(estudiantes, new Callback<Boolean>() {
-                                    @Override
-                                    public void success(Boolean aBoolean, Response response) {
-
-                               Toast.makeText(getApplicationContext(),"se actualizo el estado con exito", Toast.LENGTH_LONG).show();
-
-                                    }
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                              Toast.makeText(getApplicationContext(), "Opps ha fallado la actualizacion", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-
-                            } else {
-                                //Inserta en el registro de entrada
-                                Registros registros=new Registros();
-                                registros.setCarne(carne);
-                                String pattern = "yyyy-MM-dd HH:mm:ss";//Formato de hora y fecha
-                                Calendar cal = Calendar.getInstance();//Recupera la hora y fecha
-                                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                                String strDate = sdf.format(cal.getTime());
-                                String fecha=strDate.substring(0,10);
-                                String hora=strDate.substring(11);
-                                registros.setHora(hora);
-                                registros.setFecha(fecha);
-                                MainActivity m=new MainActivity();
-                                registros.setId_ev(m.id_ev);
-                                Toast.makeText(getApplicationContext(),registros.getHora(), Toast.LENGTH_LONG).show();
-
-                                Toast.makeText(getApplicationContext(),registros.getFecha(), Toast.LENGTH_LONG).show();
-
-                                //Se encarga de meter informacion en el registro de entrada en sql
-                                serverApi.postRegistrosSInformation(registros, new Callback<Boolean>() {
-                                    @Override
-                                    public void success(Boolean aBoolean, Response response) {
-
-                                        Toast.makeText(getApplicationContext(), "Se ha insertado con exito", Toast.LENGTH_LONG).show();
-
+                                    catch (NumberFormatException io)
+                                    {
+                                        mensaje("Error , en la conexion");
                                     }
 
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        Toast.makeText(getApplicationContext(), "Opps ha fallado la insercion", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                                estudiantes.setEstado("1");
-                                //Se encarga de actualizar la informacion del estado el cual indica que la persona salio
-                                serverApi.putEstudiantesInformation(estudiantes, new Callback<Boolean>() {
-                                    @Override
-                                    public void success(Boolean aBoolean, Response response) {
+                                }
 
-                                        Toast.makeText(getApplicationContext(), "se actualizo el estado con exito", Toast.LENGTH_LONG).show();
-
-                                    }
-                                    @Override
-                                    public void failure(RetrofitError error) {
-                                        Toast.makeText(getApplicationContext(), "Opps ha fallado la actualizacion", Toast.LENGTH_LONG).show();
-                                    }
-                                });
-
+                            }else {
+                                Toast.makeText(getApplicationContext(), "Datos inconsistentes", Toast.LENGTH_LONG).show();
                             }
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Datos inconsistentes", Toast.LENGTH_LONG).show();
                         }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage().toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
-
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Toast.makeText(getApplicationContext(), error.getMessage().toString(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                   }catch (NumberFormatException io)
+                {
+                    Toast.makeText(getApplicationContext(), io.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

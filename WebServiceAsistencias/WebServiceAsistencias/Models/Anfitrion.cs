@@ -9,6 +9,7 @@ namespace WebServiceAsistencias.Models
     {
         public string id { get; set; }
         public string contra { get; set; }
+        public string tipoCuenta { get; set;}
       
     }
 }

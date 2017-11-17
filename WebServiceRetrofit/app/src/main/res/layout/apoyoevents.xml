@@ -2,12 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo2">
+    android:background="#ffffff">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <TableRow
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/tvEvents" />
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageViewEvento"
+            android:contentDescription="@string/imvev"
+            android:layout_marginLeft="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/tvEvents"
+            android:layout_marginTop="30dp" />
+    </TableRow>
+
 </LinearLayout>

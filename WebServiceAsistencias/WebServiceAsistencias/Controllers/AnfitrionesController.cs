@@ -28,12 +28,12 @@ namespace WebServiceAsistencias.Controllers
         // PUT     Clientes/Lugar/3  { Id:3, Nombre:"nombre", Telefono:123456789 }
         // GET     Clientes/Lugar/3
         // DELETE  Clientes/Lugar/3
-        public JsonResult Anfitrion(string id,string pass, Anfitrion item)
+        public JsonResult Anfitrion(string id,string pass, Encargado item)
         {
             switch (Request.HttpMethod)
             {
                 case "POST":
-                    return Json(anfitrionesManager.InsertarCliente(item));
+                    return Json(anfitrionesManager.InsertarEdecan(item));
              //   case "PUT":
                  //   return Json(anfitrionesManager.ActualizarCliente(item));
                 case "GET":
